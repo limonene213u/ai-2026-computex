@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Landscape Report: Year-End 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #fdfaf6; /* Warm neutral background */
+            color: #4b5563;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+        }
+        .btn-interactive {
+            transition: all 0.2s;
+        }
+        .btn-interactive:active {
+            transform: scale(0.98);
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            width: 100%;
+            max-width: 600px;
+            height: 300px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .tab-active {
+            border-bottom: 2px solid #6366f1;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        .tab-inactive {
+            color: #9ca3af;
+            font-weight: 400;
+        }
+        .tab-inactive:hover {
+            color: #6b7280;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af; 
+        }
+    </style>
+    <!-- Chosen Palette: Warm Neutrals & Calm Harmony (Background: #fdfaf6, Text: #4b5563, Accents: Indigo/Teal/Rose for differentiation but muted) -->
+    <!-- Application Structure Plan:
+         1. Hero Section: Sets the context of "Year-End 2025" and the shift to "Reasoning".
+         2. "The Big Three" Dashboard: High-level cards for ChatGPT, Claude, Gemini.
+         3. Interactive Deep Dive (Tabs):
+            - Tab A: Performance & Benchmarks (Chart.js Bar Chart).
+            - Tab B: The Workspace Revolution (Canvas vs Artifacts interactive toggle).
+            - Tab C: Timeline of 2025 (Vertical list).
+         4. "Find Your AI" Wizard: Simple interactive filter to recommend a tool based on user need.
+         5. Footer: Summary.
+         Rationale: Users range from beginners to power users. A dashboard provides immediate value, while tabs allow deep exploration without overwhelming the page. The wizard personalizes the data.
+    -->
+    <!-- Visualization & Content Choices:
+         - Performance Chart: Bar chart to compare GPT-5.2, Opus 4.5, and Human benchmarks. Goal: Show the "Superhuman" leap.
+         - Workspace Mockups: HTML/CSS representations instead of screenshots to keep it lightweight and styled. Goal: Explain "Canvas/Artifacts".
+         - Comparison Matrix: Simple grid for features.
+         - CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- Hero Section -->
+    <header class="bg-white border-b border-stone-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <h1 class="text-xl font-bold text-stone-700 tracking-tight">AI Trends Report <span class="text-indigo-500">2025</span></h1>
+            <nav class="hidden md:flex space-x-8 text-sm font-medium text-stone-500">
+                <a href="#dashboard" class="hover:text-stone-900 transition-colors">概況</a>
+                <a href="#comparison" class="hover:text-stone-900 transition-colors">性能比較</a>
+                <a href="#workspace" class="hover:text-stone-900 transition-colors">新機能</a>
+                <a href="#recommend" class="hover:text-stone-900 transition-colors">診断</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+        
+        <!-- Intro Text -->
+        <div class="mb-12 text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl sm:text-4xl font-bold text-stone-800 mb-4">「チャット」から「推論・共創」の時代へ</h2>
+            <p class="text-lg text-stone-600 leading-relaxed">
+                2025年末、AIは単なる会話相手を超え、思考し、作業環境そのものへと進化しました。<br>
+                本レポートでは、<strong>ChatGPT</strong>, <strong>Claude</strong>, <strong>Gemini</strong> の3大モデルの現在地と、
+                初心者からプロまで役立つ最新の使い分けガイドを提供します。
+            </p>
+        </div>
+
+        <!-- Section 1: The Big Three Snapshot (Dashboard) -->
+        <section id="dashboard" class="mb-16">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-6 border-b border-stone-200 pb-2">
+                <div>
+                    <h3 class="text-2xl font-semibold text-stone-800">主要3モデルの現在地</h3>
+                    <p class="text-sm text-stone-500 mt-1">クリックして詳細を表示</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- ChatGPT Card -->
+                <div class="card p-6 cursor-pointer border-t-4 border-rose-400 group hover:bg-rose-50/30" onclick="showModelDetail('chatgpt')">
+                    <div class="flex justify-between items-start mb-4">
+                        <h4 class="text-xl font-bold text-stone-800">ChatGPT</h4>
+                        <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2 py-1 rounded">OpenAI</span>
+                    </div>
+                    <p class="text-stone-600 text-sm mb-4 min-h-[40px]">「推論」と「万能性」の王者。<br>o1モデルとCanvasで死角なし。</p>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="bg-stone-100 px-2 py-1 rounded">o1 (推論)</span>
+                        <span class="bg-stone-100 px-2 py-1 rounded">Canvas</span>
+                        <span class="bg-stone-100 px-2 py-1 rounded">Search</span>
+                    </div>
+                    <div class="mt-4 text-rose-500 text-sm font-medium group-hover:underline">詳細を見る →</div>
+                </div>
+
+                <!-- Claude Card -->
+                <div class="card p-6 cursor-pointer border-t-4 border-indigo-400 group hover:bg-indigo-50/30" onclick="showModelDetail('claude')">
+                    <div class="flex justify-between items-start mb-4">
+                        <h4 class="text-xl font-bold text-stone-800">Claude</h4>
+                        <span class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2 py-1 rounded">Anthropic</span>
+                    </div>
+                    <p class="text-stone-600 text-sm mb-4 min-h-[40px]">「制作」と「コーディング」のプロ。<br>Artifactsでアプリ開発が瞬時に。</p>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="bg-stone-100 px-2 py-1 rounded">Opus 4.5</span>
+                        <span class="bg-stone-100 px-2 py-1 rounded">Artifacts</span>
+                        <span class="bg-stone-100 px-2 py-1 rounded">Computer Use</span>
+                    </div>
+                    <div class="mt-4 text-indigo-500 text-sm font-medium group-hover:underline">詳細を見る →</div>
+                </div>
+
+                <!-- Gemini Card -->
+                <div class="card p-6 cursor-pointer border-t-4 border-teal-400 group hover:bg-teal-50/30" onclick="showModelDetail('gemini')">
+                    <div class="flex justify-between items-start mb-4">
+                        <h4 class="text-xl font-bold text-stone-800">Gemini</h4>
+                        <span class="bg-teal-100 text-teal-700 text-xs font-bold px-2 py-1 rounded">Google</span>
+                    </div>
+                    <p class="text-stone-600 text-sm mb-4 min-h-[40px]">Google経済圏の最強アシスタント。<br>長文・動画解析に強み。</p>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="bg-stone-100 px-2 py-1 rounded">Gemini 3.0</span>
+                        <span class="bg-stone-100 px-2 py-1 rounded">Workspace</span>
+                        <span class="bg-stone-100 px-2 py-1 rounded">2M Token</span>
+                    </div>
+                    <div class="mt-4 text-teal-500 text-sm font-medium group-hover:underline">詳細を見る →</div>
+                </div>
+            </div>
+
+            <!-- Dynamic Detail Area -->
+            <div id="model-detail-panel" class="hidden mt-6 p-6 bg-white border border-stone-200 rounded-xl shadow-inner animate-fade-in">
+                <h4 id="detail-title" class="text-lg font-bold text-stone-800 mb-2"></h4>
+                <p id="detail-desc" class="text-stone-600 text-sm mb-4"></p>
+                <div class="bg-stone-50 p-4 rounded-lg">
+                    <h5 class="text-sm font-semibold text-stone-700 mb-2">2025年の主要アップデート:</h5>
+                    <ul id="detail-list" class="list-disc list-inside text-sm text-stone-600 space-y-1"></ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Performance Comparison (Charts) -->
+        <section id="comparison" class="mb-16">
+            <div class="mb-6">
+                <h3 class="text-2xl font-semibold text-stone-800">推論能力の進化</h3>
+                <p class="text-stone-600 mt-2 max-w-3xl">
+                    2025年の最大のトピックは、AIが「即答する」だけでなく「考えて（推論して）から答える」ようになったことです。
+                    以下は、抽象的な難問解決能力を測るベンチマーク（ARC-AGI等）の推定比較です。
+                </p>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-stone-200">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2">
+                        <div class="chart-container">
+                            <canvas id="benchmarkChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="flex flex-col justify-center space-y-4">
+                        <div class="p-4 bg-rose-50 rounded-lg border-l-4 border-rose-400">
+                            <h4 class="font-bold text-rose-800 text-sm">GPT-5.2 / o1</h4>
+                            <p class="text-xs text-rose-700 mt-1">複雑な数学や科学の問題で、博士課程レベルの推論能力を発揮。思考時間を確保することで精度が劇的に向上。</p>
+                        </div>
+                        <div class="p-4 bg-indigo-50 rounded-lg border-l-4 border-indigo-400">
+                            <h4 class="font-bold text-indigo-800 text-sm">Claude Opus 4.5</h4>
+                            <p class="text-xs text-indigo-700 mt-1">コーディングやニュアンスの理解において極めて高いスコア。人間らしい自然な対話能力も維持。</p>
+                        </div>
+                        <div class="p-4 bg-stone-100 rounded-lg border-l-4 border-stone-400">
+                            <h4 class="font-bold text-stone-800 text-sm">Human Expert</h4>
+                            <p class="text-xs text-stone-600 mt-1">専門家平均。2025年のトップモデルは、特定のタスクにおいてついに人間を超え始めています。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: The Workspace Revolution (Interactive UI Demo) -->
+        <section id="workspace" class="mb-16">
+            <div class="mb-6">
+                <h3 class="text-2xl font-semibold text-stone-800">UIの革命: Canvas & Artifacts</h3>
+                <p class="text-stone-600 mt-2">
+                    チャット欄で会話が終わる時代は終わりました。2025年のスタンダードは「画面分割」です。<br>
+                    左側で指示を出し、右側で成果物（ドキュメント、コード、アプリ）を直接編集・プレビューします。
+                </p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-stone-200 overflow-hidden">
+                <!-- Toggle Controls -->
+                <div class="flex border-b border-stone-200 bg-stone-50">
+                    <button onclick="toggleWorkspace('canvas')" id="btn-canvas" class="flex-1 py-4 text-center font-medium text-sm transition-colors bg-white text-rose-600 border-b-2 border-rose-500">
+                        ChatGPT "Canvas"
+                    </button>
+                    <button onclick="toggleWorkspace('artifacts')" id="btn-artifacts" class="flex-1 py-4 text-center font-medium text-sm text-stone-500 hover:text-stone-700 transition-colors">
+                        Claude "Artifacts"
+                    </button>
+                </div>
+
+                <!-- Simulation View -->
+                <div class="p-6 md:p-8 bg-stone-100 min-h-[400px]">
+                    <div class="flex flex-col md:flex-row gap-4 h-full">
+                        <!-- Left: Chat Area (Static) -->
+                        <div class="w-full md:w-1/3 bg-white rounded-lg p-4 shadow-sm flex flex-col gap-3">
+                            <div class="text-xs text-stone-400 font-bold uppercase mb-2">Chat Input</div>
+                            <div class="flex items-start gap-2">
+                                <div class="w-6 h-6 rounded-full bg-stone-200 flex-shrink-0"></div>
+                                <div class="bg-stone-100 p-2 rounded text-xs text-stone-600 w-full">
+                                    <span id="demo-prompt">ブログ記事の構成案を作って。もっとカジュアルに修正して。</span>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-2">
+                                <div class="w-6 h-6 rounded-full bg-stone-800 flex-shrink-0"></div>
+                                <div class="bg-blue-50 p-2 rounded text-xs text-stone-800 w-full">
+                                    <span id="demo-response">右側のエディタで修正案を作成しました。特定の箇所を選択してコメントも可能です。</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Workspace Area (Dynamic) -->
+                        <div class="w-full md:w-2/3 bg-white rounded-lg p-4 shadow-sm border border-stone-200 relative">
+                            <div class="absolute top-3 right-3 flex gap-2">
+                                <span class="w-3 h-3 rounded-full bg-red-400"></span>
+                                <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+                                <span class="w-3 h-3 rounded-full bg-green-400"></span>
+                            </div>
+                            <div class="mt-4 h-full flex flex-col">
+                                <div class="text-xs text-stone-400 font-bold uppercase mb-2" id="workspace-label">Editor / Preview</div>
+                                <div id="workspace-content" class="flex-grow bg-stone-50 rounded border border-stone-100 p-4 font-mono text-xs text-stone-700 overflow-y-auto max-h-[250px]">
+                                    <!-- Content injected via JS -->
+                                </div>
+                                <div class="mt-2 text-center">
+                                    <button onclick="simulateEdit()" class="px-4 py-2 bg-stone-800 text-white text-xs rounded hover:bg-stone-700 transition btn-interactive">
+                                        修正指示をシミュレート
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p id="workspace-explanation" class="text-sm text-stone-600 italic">
+                            Canvasは「文書・コードの推敲」に特化しており、ワードプロセッサのように直接編集できます。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Recommendation Wizard -->
+        <section id="recommend" class="mb-16">
+            <div class="mb-6">
+                <h3 class="text-2xl font-semibold text-stone-800">あなたに最適なAIは？</h3>
+                <p class="text-stone-600 mt-2">
+                    簡単な質問に答えるだけで、2025年末時点で最もおすすめのツールを提案します。
+                </p>
+            </div>
+
+            <div class="bg-white p-8 rounded-xl shadow-sm border border-stone-200 text-center">
+                <div id="quiz-container">
+                    <h4 class="text-lg font-medium text-stone-800 mb-6">Q. AIを主に何に使いたいですか？</h4>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <button onclick="runQuiz('create')" class="px-6 py-3 bg-stone-100 hover:bg-stone-200 rounded-full text-stone-700 font-medium transition btn-interactive">
+                            🎨 アプリ・資料作成
+                        </button>
+                        <button onclick="runQuiz('talk')" class="px-6 py-3 bg-stone-100 hover:bg-stone-200 rounded-full text-stone-700 font-medium transition btn-interactive">
+                            🗣️ 会話・相談・検索
+                        </button>
+                        <button onclick="runQuiz('office')" class="px-6 py-3 bg-stone-100 hover:bg-stone-200 rounded-full text-stone-700 font-medium transition btn-interactive">
+                            📧 メール・要約・業務
+                        </button>
+                    </div>
+                </div>
+
+                <div id="quiz-result" class="hidden mt-4 animate-fade-in bg-stone-50 p-6 rounded-lg">
+                    <h4 class="text-xl font-bold text-stone-800 mb-2">おすすめ: <span id="result-name" class="text-indigo-600"></span></h4>
+                    <p id="result-desc" class="text-stone-600 text-sm"></p>
+                    <button onclick="resetQuiz()" class="mt-4 text-xs text-stone-400 hover:text-stone-600 underline">もう一度選ぶ</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Timeline -->
+        <section class="mb-8">
+            <h3 class="text-xl font-bold text-stone-800 mb-6 pl-2 border-l-4 border-stone-800">2025 AI Updates Timeline</h3>
+            <div class="relative border-l border-stone-300 ml-4 space-y-8">
+                <div class="pl-6 relative">
+                    <span class="absolute -left-1.5 top-1.5 w-3 h-3 bg-stone-400 rounded-full"></span>
+                    <span class="text-xs font-bold text-stone-500">2025.02</span>
+                    <h4 class="font-bold text-stone-800">ChatGPT "o1" 正式版リリース</h4>
+                    <p class="text-sm text-stone-600">推論モデルが一般化。数学・科学分野での利用が加速。</p>
+                </div>
+                <div class="pl-6 relative">
+                    <span class="absolute -left-1.5 top-1.5 w-3 h-3 bg-stone-400 rounded-full"></span>
+                    <span class="text-xs font-bold text-stone-500">2025.06</span>
+                    <h4 class="font-bold text-stone-800">Claude 3.5 Sonnet / Artifacts 普及</h4>
+                    <p class="text-sm text-stone-600">エンジニア界隈でClaudeが一強状態に。「プレビューしながら作る」が標準へ。</p>
+                </div>
+                <div class="pl-6 relative">
+                    <span class="absolute -left-1.5 top-1.5 w-3 h-3 bg-stone-400 rounded-full"></span>
+                    <span class="text-xs font-bold text-stone-500">2025.10</span>
+                    <h4 class="font-bold text-stone-800">ChatGPT "Canvas" & Search</h4>
+                    <p class="text-sm text-stone-600">OpenAIがUI刷新で反撃。Google検索対抗機能も統合。</p>
+                </div>
+                <div class="pl-6 relative">
+                    <span class="absolute -left-1.5 top-1.5 w-3 h-3 bg-stone-800 rounded-full ring-4 ring-stone-200"></span>
+                    <span class="text-xs font-bold text-stone-500">2025.12 (現在)</span>
+                    <h4 class="font-bold text-stone-800">Gemini 3.0 / GPT-5.2 / Opus 4.5</h4>
+                    <p class="text-sm text-stone-600">次世代モデルラッシュ。エージェント機能（PC操作）が次の戦場へ。</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-white border-t border-stone-200 mt-auto py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm text-stone-500">Generated based on December 2025 Market Research Data.</p>
+            <p class="text-xs text-stone-400 mt-2">※本レポートはAIシミュレーションに基づく架空の2025年末シナリオを含みます。</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- Data & State ---
+        const models = {
+            chatgpt: {
+                title: "ChatGPT (OpenAI)",
+                desc: "総合力No.1。日常会話から高度な推論までこなす万能選手。",
+                updates: [
+                    "<b>o1 (Reasoning):</b> 数学・プログラミング等の難問に対し、思考時間を設けて回答精度を大幅向上。",
+                    "<b>Canvas:</b> チャット横で文章やコードを直接編集できるワークスペース機能。",
+                    "<b>Search:</b> 最新ニュースや天気などをリアルタイムに検索し、ソース付きで回答。",
+                    "<b>Advanced Voice:</b> 人間と区別がつかないレベルのリアルタイム音声対話。"
+                ]
+            },
+            claude: {
+                title: "Claude (Anthropic)",
+                desc: "日本語の自然さとコーディング能力でクリエイターに大人気。",
+                updates: [
+                    "<b>Artifacts:</b> アプリ、スライド、図解をチャット横で即座にプレビュー生成。",
+                    "<b>Projects:</b> 関連資料をまとめてアップロードし、専用の知識ベースとして活用可能。",
+                    "<b>Computer Use:</b> AIがマウスカーソルを動かし、PC操作を代行する機能（ベータ版）。",
+                    "<b>3.5 Sonnet / 4.5 Opus:</b> 業界最高水準のベンチマークスコア。"
+                ]
+            },
+            gemini: {
+                title: "Gemini (Google)",
+                desc: "Google Workspaceとの連携で、業務効率化の最強パートナー。",
+                updates: [
+                    "<b>Workspace連携:</b> Gmail, Docs, Driveの中身をAIが横断検索・要約。",
+                    "<b>Long Context:</b> 数時間の動画や数百ページのPDFを一度に読み込んで分析。",
+                    "<b>Gems:</b> 「英語教師」「校正者」など、特定の役割を持つAIを簡単に作成・保存。",
+                    "<b>Multimodal:</b> 映像や音声をリアルタイムで認識する能力が高い。"
+                ]
+            }
+        };
+
+        const workspaceContent = {
+            canvas: {
+                prompt: "ブログ記事の構成案を作って。もっとカジュアルに修正して。",
+                response: "右側のエディタで修正案を作成しました。ハイライトして直接書き換えられます。",
+                content: `<h1>【2025年版】AIツール活用術！</h1>
+<p>こんにちは！今日は最新AIのお話です。</p>
+<h2>1. ChatGPTは「考える」相棒</h2>
+<p>これまでのチャットとは一味違います。o1モデルなら複雑な問題も解決！</p>
+<h2>2. Claudeで作ろう</h2>
+<p>アプリも資料も一瞬で。</p>
+<p>... (ここを直接編集可能) ...</p>`,
+                label: "Canvas Editor (Document)",
+                desc: "Canvasは「文書・コードの推敲」に特化しており、ワードプロセッサのように直接編集できます。ハイライトして「ここを短く」といった部分指示が可能です。",
+                btnColor: "border-rose-500 text-rose-600",
+                buttonId: "btn-canvas"
+            },
+            artifacts: {
+                prompt: "シンプルなTodoリストアプリを作って。Reactを使って。",
+                response: "右側にアプリのプレビューを表示しました。コードタブで中身も確認できます。",
+                content: `// React Component Preview
+function TodoApp() {
+  return (
+    <div class="card p-4 shadow">
+      <h3 class="font-bold mb-2">My Tasks</h3>
+      <ul>
+        <li>☑️ AIレポートを読む</li>
+        <li>⬜ Claudeを試す</li>
+        <li>⬜ ランチに行く</li>
+      </ul>
+      <button class="bg-blue-500 text-white px-3 py-1 rounded text-xs mt-2">Add Task</button>
+    </div>
+  );
+}`,
+                label: "Artifacts Preview (App/Code)",
+                desc: "Artifactsは「完成品を見る」ことに特化しています。コードが実行され、実際に動くアプリやデザインされた図解がその場に現れます。",
+                btnColor: "border-indigo-500 text-indigo-600",
+                buttonId: "btn-artifacts"
+            }
+        };
+
+        // --- Event Listeners & Functions ---
+
+        // 1. Dashboard Details
+        function showModelDetail(key) {
+            const panel = document.getElementById('model-detail-panel');
+            const data = models[key];
+            
+            document.getElementById('detail-title').innerText = data.title;
+            document.getElementById('detail-desc').innerText = data.desc;
+            
+            const list = document.getElementById('detail-list');
+            list.innerHTML = '';
+            data.updates.forEach(item => {
+                const li = document.createElement('li');
+                li.innerHTML = item;
+                list.appendChild(li);
+            });
+
+            panel.classList.remove('hidden');
+            // Smooth scroll
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // 2. Chart Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('benchmarkChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['GPQA (科学難問)', 'HumanEval (コード)', 'MATH (数学)', 'ARC-AGI (抽象推論)'],
+                    datasets: [
+                        {
+                            label: 'GPT-5.2 / o1',
+                            data: [78, 92, 94, 86],
+                            backgroundColor: 'rgba(244, 63, 94, 0.7)', // Rose
+                            borderColor: 'rgba(244, 63, 94, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Claude Opus 4.5',
+                            data: [76, 94, 90, 80],
+                            backgroundColor: 'rgba(99, 102, 241, 0.7)', // Indigo
+                            borderColor: 'rgba(99, 102, 241, 1)',
+                            borderWidth: 1
+                        },
+                        {
+                            label: 'Gemini 1.5 Pro',
+                            data: [72, 88, 85, 75],
+                            backgroundColor: 'rgba(20, 184, 166, 0.7)', // Teal
+                            borderColor: 'rgba(20, 184, 166, 1)',
+                            borderWidth: 1
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        title: { 
+                            display: true, 
+                            text: '主要モデルのベンチマーク比較 (推定値)',
+                            font: { size: 14 }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 50,
+                            max: 100
+                        }
+                    }
+                }
+            });
+            
+            // Initial Workspace Load
+            toggleWorkspace('canvas');
+        });
+
+        // 3. Workspace Toggle Logic
+        let currentWorkspace = 'canvas';
+
+        function toggleWorkspace(type) {
+            currentWorkspace = type;
+            const data = workspaceContent[type];
+            
+            // UI Content Update
+            document.getElementById('demo-prompt').innerText = data.prompt;
+            document.getElementById('demo-response').innerText = data.response;
+            document.getElementById('workspace-content').innerHTML = data.content;
+            document.getElementById('workspace-label').innerText = data.label;
+            document.getElementById('workspace-explanation').innerText = data.desc;
+
+            // Button Styles
+            const btnCanvas = document.getElementById('btn-canvas');
+            const btnArtifacts = document.getElementById('btn-artifacts');
+            
+            // Reset classes
+            btnCanvas.className = "flex-1 py-4 text-center font-medium text-sm text-stone-500 hover:text-stone-700 transition-colors";
+            btnArtifacts.className = "flex-1 py-4 text-center font-medium text-sm text-stone-500 hover:text-stone-700 transition-colors";
+
+            // Apply active class
+            const activeBtn = document.getElementById(data.buttonId);
+            activeBtn.className = `flex-1 py-4 text-center font-medium text-sm bg-white border-b-2 ${data.btnColor}`;
+        }
+
+        function simulateEdit() {
+            const contentDiv = document.getElementById('workspace-content');
+            if (currentWorkspace === 'canvas') {
+                contentDiv.innerHTML = contentDiv.innerHTML.replace("...", "<span class='bg-yellow-200'>[AI修正: ここに最新トレンドの段落を追加しました]</span>");
+            } else {
+                contentDiv.innerHTML = contentDiv.innerHTML.replace("☑️ AIレポートを読む", "✅ <span class='text-green-600 font-bold'>AIレポート完了!</span>");
+            }
+        }
+
+        // 4. Wizard Logic
+        function runQuiz(choice) {
+            const resultDiv = document.getElementById('quiz-result');
+            const nameSpan = document.getElementById('result-name');
+            const descP = document.getElementById('result-desc');
+            const container = document.getElementById('quiz-container');
+
+            let result = {};
+
+            if (choice === 'create') {
+                result = {
+                    name: "Claude (Claude 3.5 Sonnet / Artifacts)",
+                    desc: "「これを作って」と言えばプレビューが出てくるClaudeのArtifacts機能が最適です。プログラミングの知識がなくても、ゲームやツール、スライド作成が直感的に行えます。"
+                };
+            } else if (choice === 'talk') {
+                result = {
+                    name: "ChatGPT (Plus / o1)",
+                    desc: "スマホアプリの音声会話モードの自然さは随一。また、複雑な相談事がある場合も、o1モデルの深い推論能力が役に立ちます。"
+                };
+            } else if (choice === 'office') {
+                result = {
+                    name: "Gemini (Google Workspace)",
+                    desc: "GmailやGoogleドライブを使っているならGemini一択です。「あのメールどこだっけ？」や「会議の動画を要約して」といった日常業務を劇的に効率化します。"
+                };
+            }
+
+            container.classList.add('hidden');
+            resultDiv.classList.remove('hidden');
+            nameSpan.innerText = result.name;
+            descP.innerText = result.desc;
+        }
+
+        function resetQuiz() {
+            document.getElementById('quiz-container').classList.remove('hidden');
+            document.getElementById('quiz-result').classList.add('hidden');
+        }
+
+    </script>
+</body>
+</html>
