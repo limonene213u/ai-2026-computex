@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>日式漢文 / Japanese-style Kanbun - COMPUTEX 2026</title>
+  <meta name="description" content="A playful Japanese-style Kanbun message for Taiwan-Japan open-source friendship at COMPUTEX 2026." />
+  <style>
+    :root {
+      --bg: #070812;
+      --panel: rgba(255, 255, 255, 0.075);
+      --panel-strong: rgba(255, 255, 255, 0.12);
+      --line: rgba(255, 255, 255, 0.18);
+      --text: #f7f8ff;
+      --muted: #b9c0d4;
+      --soft: #8d96b8;
+      --hot: #ff4fd8;
+      --cyan: #42e8ff;
+      --green: #80ffbf;
+      --yellow: #ffe66d;
+      --shadow: 0 20px 80px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255, 79, 216, 0.25), transparent 30%),
+        radial-gradient(circle at 78% 16%, rgba(66, 232, 255, 0.22), transparent 32%),
+        radial-gradient(circle at 50% 100%, rgba(128, 255, 191, 0.12), transparent 40%),
+        linear-gradient(135deg, #050610 0%, #0b1024 52%, #11081d 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", "Noto Sans TC", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent 78%);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap {
+      width: min(1040px, calc(100% - 32px));
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    header { padding: 24px 0 0; }
+
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border: 1px solid var(--line);
+      background: rgba(7, 8, 18, 0.55);
+      backdrop-filter: blur(18px);
+      border-radius: 999px;
+      padding: 12px 14px 12px 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .orb {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: conic-gradient(from 180deg, var(--hot), var(--cyan), var(--green), var(--hot));
+      box-shadow: 0 0 28px rgba(66, 232, 255, 0.55);
+    }
+
+    .navlinks {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .navlinks a {
+      border: 1px solid transparent;
+      color: var(--muted);
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      transition: 160ms ease;
+    }
+
+    .navlinks a:hover {
+      color: var(--text);
+      border-color: var(--line);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .hero {
+      padding: 74px 0 34px;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(66, 232, 255, 0.38);
+      background: rgba(66, 232, 255, 0.09);
+      color: #d9fbff;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 0 rgba(128, 255, 191, 0.8);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      70% { box-shadow: 0 0 0 12px rgba(128, 255, 191, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(128, 255, 191, 0); }
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(44px, 8vw, 92px);
+      line-height: 0.96;
+      letter-spacing: -0.06em;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(26px, 4vw, 44px);
+      letter-spacing: -0.035em;
+    }
+
+    h3 { margin: 0 0 10px; }
+
+    .gradient {
+      background: linear-gradient(95deg, #fff 8%, #bff8ff 36%, #ffb6ef 70%, #fff3aa 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .lead {
+      margin: 24px 0 0;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 21px);
+      line-height: 1.8;
+      max-width: 780px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.045));
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::after {
+      content: "";
+      position: absolute;
+      inset: auto -50px -80px auto;
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(66,232,255,0.20), transparent 60%);
+      pointer-events: none;
+    }
+
+    .kanbun {
+      font-family: "Noto Serif TC", "Noto Serif JP", "Yu Mincho", "Hiragino Mincho ProN", serif;
+      font-size: clamp(22px, 3.2vw, 36px);
+      line-height: 1.9;
+      letter-spacing: 0.05em;
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    .kicker {
+      margin: 0 0 12px;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    section { padding: 36px 0; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.06);
+      border-radius: 22px;
+      padding: 22px;
+      min-height: 190px;
+    }
+
+    .card p, .note p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .note {
+      border-left: 3px solid var(--cyan);
+      padding: 4px 0 4px 16px;
+      margin-top: 18px;
+    }
+
+    code {
+      color: #fff3aa;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 2px 6px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 14px;
+      font-weight: 900;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      transition: 170ms ease;
+    }
+
+    .btn.primary {
+      color: #061018;
+      background: linear-gradient(135deg, var(--cyan), var(--green));
+      border-color: transparent;
+      box-shadow: 0 10px 36px rgba(66, 232, 255, 0.28);
+    }
+
+    .btn:hover { transform: translateY(-2px); background: var(--panel-strong); }
+
+    footer {
+      padding: 30px 0 42px;
+      color: var(--soft);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      nav { border-radius: 24px; align-items: flex-start; flex-direction: column; }
+      .navlinks { justify-content: flex-start; }
+      .hero, .grid { grid-template-columns: 1fr; }
+      .kanbun { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <nav aria-label="Main navigation">
+      <a class="brand" href="./" aria-label="Back to limoko / AETS MAGI home">
+        <span class="orb" aria-hidden="true"></span>
+        <span>limoko / AETS MAGI</span>
+      </a>
+      <div class="navlinks">
+        <a href="./">Home</a>
+        <a href="#kanbun">日式漢文</a>
+        <a href="#notes">Notes</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <div class="badge"><span class="pulse"></span> COMPUTEX 2026 · Taiwan-Japan OSS friendship</div>
+        <h1><span class="gradient">日式漢文</span><br />for open source.</h1>
+        <p class="lead">
+          這不是標準中文，而是日本人用漢字寫出的「日式漢文」風格。
+          日本仍把漢文作為教養教育的一部分；不過日本人常讀的是杜甫、李白、白居易、孔子、孟子等古典，而不是現代中文。
+          所以日本人用漢字寫文章時，常常會變成有點古典、有點像詩，也有點像文字遊戲。
+        </p>
+      </div>
+      <div class="panel" id="kanbun">
+        <p class="kicker">Japanese-style Kanbun</p>
+        <p class="kanbun">吾愛臺灣、吾愛日本。
+蓋技術者相見、互示機械命令之書。
+程式碼既通、語言之壁自滅而去。
+開源之道、四方皆成友胞。
+罔憂慮事、唯朋有、科技繫相互爾。
+技兎派分可成自由配布。
+其處唯有自由且樂而已。
+嗚呼、技術何其摸暖哉！</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="grid">
+        <article class="card">
+          <p class="kicker">Meaning</p>
+          <h2>Code becomes a bridge.</h2>
+          <p>
+            技術者相見れば、互いにコードを示す。程式碼が通じれば、語言の壁は自然に消えていく。
+            開源の道では、四方の人々が友となり同胞となる。そこにはただ自由と楽しさがあるのみ。
+          </p>
+        </article>
+        <article class="card">
+          <p class="kicker">Context</p>
+          <h2>Old words, modern tools.</h2>
+          <p>
+            これは標準中文ではなく、日式漢文・疑似華語・漢字遊戲です。
+            古典っぽい言い回しで、COMPUTEX で出会った開源技術者同士の友情を表しています。
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="notes">
+      <div class="panel">
+        <p class="kicker">Notes for friends</p>
+        <h2>文字遊戲解説</h2>
+        <div class="note">
+          <p>
+            <code>機械命令之書</code> means source code in this playful style: a written book of instructions for machines.
+            In normal Taiwan Mandarin, <code>程式碼</code> is the straightforward word for code.
+          </p>
+        </div>
+        <div class="note">
+          <p>
+            <code>技兎派分</code> is Japanese-style ateji. Its sound is close to GitHub.
+            <code>技</code> means technique; <code>兎</code> suggests code that jumps, multiplies, and can be reused like rabbits;
+            <code>派分</code> suggests branching, sharing, and free distribution.
+          </p>
+        </div>
+        <div class="note">
+          <p>
+            <code>摸暖</code> is another invented word. In Japanese-style reading it sounds like “modern”,
+            while the characters mean “touch” and “warm”. So the final line means:
+            technology is modern, and also warm to the touch.
+          </p>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="./">Back to COMPUTEX OSS profile</a>
+          <a class="btn" href="https://github.com/limonene213u" target="_blank" rel="noopener">GitHub: limonene213u</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    © 2026 limoko / limonene213u / AETS MAGI. 日式漢文 for COMPUTEX 2026.
+  </footer>
+</body>
+</html>
