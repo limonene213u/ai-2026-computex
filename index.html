@@ -9,148 +9,19 @@
   <meta property="og:description" content="ROCm, local LLMs, MCP agents, Japanese LLM evaluation, research records, and field tools from COMPUTEX." />
   <meta property="og:type" content="website" />
   <style>
-    :root {
-      --bg: #070812;
-      --panel: rgba(255,255,255,.075);
-      --panel-strong: rgba(255,255,255,.12);
-      --line: rgba(255,255,255,.18);
-      --text: #f7f8ff;
-      --muted: #b9c0d4;
-      --soft: #8d96b8;
-      --hot: #ff4fd8;
-      --cyan: #42e8ff;
-      --green: #80ffbf;
-      --yellow: #ffe66d;
-      --shadow: 0 20px 80px rgba(0,0,0,.45);
-    }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 20% 10%, rgba(255,79,216,.25), transparent 30%),
-        radial-gradient(circle at 78% 16%, rgba(66,232,255,.22), transparent 32%),
-        radial-gradient(circle at 50% 100%, rgba(128,255,191,.12), transparent 40%),
-        linear-gradient(135deg, #050610 0%, #0b1024 52%, #11081d 100%);
-      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", "Noto Sans TC", sans-serif;
-      overflow-x: hidden;
-    }
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
-      background-size: 42px 42px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), transparent 78%);
-    }
-    a { color: inherit; text-decoration: none; }
-    .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; position: relative; z-index: 1; }
-    header { padding: 24px 0 0; }
-    nav {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      border: 1px solid var(--line);
-      background: rgba(7,8,18,.55);
-      backdrop-filter: blur(18px);
-      border-radius: 999px;
-      padding: 12px 14px 12px 22px;
-      box-shadow: var(--shadow);
-    }
-    .brand { display: flex; align-items: center; gap: 12px; font-weight: 900; letter-spacing: .02em; white-space: nowrap; }
-    .orb { width: 28px; height: 28px; border-radius: 50%; background: conic-gradient(from 180deg, var(--hot), var(--cyan), var(--green), var(--hot)); box-shadow: 0 0 28px rgba(66,232,255,.55); }
-    .navlinks { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
-    .navlinks a { border: 1px solid transparent; color: var(--muted); padding: 9px 12px; border-radius: 999px; font-size: 13px; transition: 160ms ease; }
-    .navlinks a:hover { color: var(--text); border-color: var(--line); background: rgba(255,255,255,.08); }
-    .hero { padding: 88px 0 54px; display: grid; grid-template-columns: 1.12fr .88fr; gap: 36px; align-items: center; }
-    .badge { display: inline-flex; align-items: center; gap: 10px; border: 1px solid rgba(66,232,255,.38); background: rgba(66,232,255,.09); color: #d9fbff; border-radius: 999px; padding: 8px 12px; font-size: 13px; margin-bottom: 20px; }
-    .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 rgba(128,255,191,.8); animation: pulse 1.8s infinite; }
-    @keyframes pulse { 70% { box-shadow: 0 0 0 12px rgba(128,255,191,0); } 100% { box-shadow: 0 0 0 0 rgba(128,255,191,0); } }
-    h1 { margin: 0; font-size: clamp(46px, 8vw, 96px); line-height: .92; letter-spacing: -.075em; }
-    h2 { margin: 0; font-size: clamp(28px, 4vw, 46px); letter-spacing: -.04em; }
-    .gradient { background: linear-gradient(95deg, #fff 8%, #bff8ff 36%, #ffb6ef 70%, #fff3aa 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
-    .lead { margin: 24px 0 0; color: var(--muted); font-size: clamp(17px, 2vw, 21px); line-height: 1.8; max-width: 820px; }
-    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
-    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 18px; border-radius: 14px; font-weight: 900; border: 1px solid var(--line); background: var(--panel); transition: 170ms ease; }
-    .btn.primary { color: #061018; background: linear-gradient(135deg, var(--cyan), var(--green)); border-color: transparent; box-shadow: 0 10px 36px rgba(66,232,255,.28); }
-    .btn:hover { transform: translateY(-2px); background: var(--panel-strong); }
-    .terminal { border: 1px solid var(--line); background: rgba(0,0,0,.34); border-radius: 24px; overflow: hidden; box-shadow: var(--shadow); transform: rotate(1deg); }
-    .bar { height: 42px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid var(--line); background: rgba(255,255,255,.05); }
-    .dot { width: 11px; height: 11px; border-radius: 50%; background: var(--hot); }
-    .dot:nth-child(2) { background: var(--yellow); }
-    .dot:nth-child(3) { background: var(--green); }
-    pre { margin: 0; padding: 24px; color: #d7dcff; font-size: 14px; line-height: 1.72; white-space: pre-wrap; }
-    .cyan { color: var(--cyan); } .hot { color: var(--hot); } .green { color: var(--green); } .yellow { color: var(--yellow); }
-    section { padding: 38px 0; }
-    .section-title { display: flex; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 18px; }
-    .section-title p { margin: 0; color: var(--muted); max-width: 560px; line-height: 1.7; }
-    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-    .links { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .card, .repo, .big-panel { border: 1px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.045)); border-radius: 22px; padding: 22px; box-shadow: 0 18px 60px rgba(0,0,0,.22); position: relative; overflow: hidden; }
-    .card { min-height: 210px; }
-    .repo { display: block; min-height: 150px; transition: 170ms ease; }
-    .repo:hover { transform: translateY(-2px); background: rgba(255,255,255,.1); border-color: rgba(66,232,255,.45); }
-    .card::after, .repo::after, .big-panel::after { content: ""; position: absolute; inset: auto -50px -80px auto; width: 160px; height: 160px; background: radial-gradient(circle, rgba(66,232,255,.20), transparent 60%); pointer-events: none; }
-    .kicker { margin: 0 0 12px; color: var(--green); font-size: 12px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
-    .card h3, .repo strong { display: block; margin: 0 0 12px; font-size: 22px; letter-spacing: -.035em; }
-    .card p, .repo span, .big-panel p { margin: 0; color: var(--muted); line-height: 1.7; }
-    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
-    .chip { border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.07); color: #e7eaff; padding: 7px 10px; border-radius: 999px; font-size: 12px; }
-    .split { display: grid; grid-template-columns: .9fr 1.1fr; gap: 16px; align-items: stretch; }
-    .big-panel { border-radius: 28px; padding: 28px; box-shadow: var(--shadow); }
-    .contact { text-align: center; padding: 54px 24px; border: 1px solid rgba(255,255,255,.2); border-radius: 32px; background: linear-gradient(135deg, rgba(255,79,216,.16), rgba(66,232,255,.12)), rgba(255,255,255,.06); box-shadow: var(--shadow); }
-    .contact h2 { font-size: clamp(34px, 6vw, 72px); }
-    .contact p { color: var(--muted); line-height: 1.8; max-width: 760px; margin: 20px auto 0; font-size: 18px; }
-    footer { padding: 30px 0 42px; color: var(--soft); text-align: center; font-size: 13px; }
-    @media (max-width: 900px) { nav { border-radius: 24px; align-items: flex-start; flex-direction: column; } .navlinks { justify-content: flex-start; } .hero, .split { grid-template-columns: 1fr; } .terminal { transform: none; } .grid, .links { grid-template-columns: 1fr; } .section-title { align-items: flex-start; flex-direction: column; } }
+    :root{--bg:#070812;--panel:rgba(255,255,255,.075);--panel-strong:rgba(255,255,255,.12);--line:rgba(255,255,255,.18);--text:#f7f8ff;--muted:#b9c0d4;--soft:#8d96b8;--hot:#ff4fd8;--cyan:#42e8ff;--green:#80ffbf;--yellow:#ffe66d;--shadow:0 20px 80px rgba(0,0,0,.45)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;color:var(--text);background:radial-gradient(circle at 20% 10%,rgba(255,79,216,.25),transparent 30%),radial-gradient(circle at 78% 16%,rgba(66,232,255,.22),transparent 32%),radial-gradient(circle at 50% 100%,rgba(128,255,191,.12),transparent 40%),linear-gradient(135deg,#050610 0%,#0b1024 52%,#11081d 100%);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans","Noto Sans TC",sans-serif;overflow-x:hidden}body:before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);background-size:42px 42px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.7),transparent 78%)}
+    a{color:inherit;text-decoration:none}.wrap{width:min(1120px,calc(100% - 32px));margin:0 auto;position:relative;z-index:1}header{padding:24px 0 0}nav{display:flex;align-items:center;justify-content:space-between;gap:16px;border:1px solid var(--line);background:rgba(7,8,18,.55);backdrop-filter:blur(18px);border-radius:999px;padding:12px 14px 12px 22px;box-shadow:var(--shadow)}.brand{display:flex;align-items:center;gap:12px;font-weight:900;letter-spacing:.02em;white-space:nowrap}.orb{width:28px;height:28px;border-radius:50%;background:conic-gradient(from 180deg,var(--hot),var(--cyan),var(--green),var(--hot));box-shadow:0 0 28px rgba(66,232,255,.55)}.navlinks{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.navlinks a,.lang button{border:1px solid transparent;color:var(--muted);padding:9px 12px;border-radius:999px;font-size:13px;background:transparent;cursor:pointer;transition:160ms ease}.navlinks a:hover,.lang button:hover,.lang button.active{color:var(--text);border-color:var(--line);background:rgba(255,255,255,.08)}
+    .hero{padding:88px 0 54px;display:grid;grid-template-columns:1.12fr .88fr;gap:36px;align-items:center}.badge{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(66,232,255,.38);background:rgba(66,232,255,.09);color:#d9fbff;border-radius:999px;padding:8px 12px;font-size:13px;margin-bottom:20px}.pulse{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 0 rgba(128,255,191,.8);animation:pulse 1.8s infinite}@keyframes pulse{70%{box-shadow:0 0 0 12px rgba(128,255,191,0)}100%{box-shadow:0 0 0 0 rgba(128,255,191,0)}}h1{margin:0;font-size:clamp(46px,8vw,96px);line-height:.92;letter-spacing:-.075em}h2{margin:0;font-size:clamp(28px,4vw,46px);letter-spacing:-.04em}.gradient{background:linear-gradient(95deg,#fff 8%,#bff8ff 36%,#ffb6ef 70%,#fff3aa 100%);-webkit-background-clip:text;background-clip:text;color:transparent}.lead{margin:24px 0 0;color:var(--muted);font-size:clamp(17px,2vw,21px);line-height:1.8;max-width:820px}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 18px;border-radius:14px;font-weight:900;border:1px solid var(--line);background:var(--panel);transition:170ms ease}.btn.primary{color:#061018;background:linear-gradient(135deg,var(--cyan),var(--green));border-color:transparent;box-shadow:0 10px 36px rgba(66,232,255,.28)}.btn:hover{transform:translateY(-2px);background:var(--panel-strong)}
+    .terminal{border:1px solid var(--line);background:rgba(0,0,0,.34);border-radius:24px;overflow:hidden;box-shadow:var(--shadow);transform:rotate(1deg)}.bar{height:42px;display:flex;align-items:center;gap:8px;padding:0 16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.05)}.dot{width:11px;height:11px;border-radius:50%;background:var(--hot)}.dot:nth-child(2){background:var(--yellow)}.dot:nth-child(3){background:var(--green)}pre{margin:0;padding:24px;color:#d7dcff;font-size:14px;line-height:1.72;white-space:pre-wrap}.cyan{color:var(--cyan)}.hot{color:var(--hot)}.green{color:var(--green)}.yellow{color:var(--yellow)}
+    section{padding:38px 0}.section-title{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:18px}.section-title p{margin:0;color:var(--muted);max-width:560px;line-height:1.7}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.links{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card,.repo,.big-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.045));border-radius:22px;padding:22px;box-shadow:0 18px 60px rgba(0,0,0,.22);position:relative;overflow:hidden}.card{min-height:210px}.repo{display:block;min-height:150px;transition:170ms ease}.repo:hover{transform:translateY(-2px);background:rgba(255,255,255,.1);border-color:rgba(66,232,255,.45)}.card:after,.repo:after,.big-panel:after{content:"";position:absolute;inset:auto -50px -80px auto;width:160px;height:160px;background:radial-gradient(circle,rgba(66,232,255,.20),transparent 60%);pointer-events:none}.kicker{margin:0 0 12px;color:var(--green);font-size:12px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}.card h3,.repo strong{display:block;margin:0 0 12px;font-size:22px;letter-spacing:-.035em}.card p,.repo span,.big-panel p{margin:0;color:var(--muted);line-height:1.7}.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.chip{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);color:#e7eaff;padding:7px 10px;border-radius:999px;font-size:12px}.split{display:grid;grid-template-columns:.9fr 1.1fr;gap:16px;align-items:stretch}.big-panel{border-radius:28px;padding:28px;box-shadow:var(--shadow)}.contact{text-align:center;padding:54px 24px;border:1px solid rgba(255,255,255,.2);border-radius:32px;background:linear-gradient(135deg,rgba(255,79,216,.16),rgba(66,232,255,.12)),rgba(255,255,255,.06);box-shadow:var(--shadow)}.contact h2{font-size:clamp(34px,6vw,72px)}.contact p{color:var(--muted);line-height:1.8;max-width:760px;margin:20px auto 0;font-size:18px}footer{padding:30px 0 42px;color:var(--soft);text-align:center;font-size:13px}
+    [data-lang="zh"]{display:none}body.zh [data-lang="en"]{display:none}body.zh [data-lang="zh"]{display:initial}body.zh p[data-lang="zh"],body.zh span[data-lang="zh"],body.zh strong[data-lang="zh"],body.zh h1[data-lang="zh"],body.zh h2[data-lang="zh"],body.zh h3[data-lang="zh"]{display:block}body.zh .inline[data-lang="zh"]{display:inline}@media(max-width:900px){nav{border-radius:24px;align-items:flex-start;flex-direction:column}.navlinks{justify-content:flex-start}.hero,.split{grid-template-columns:1fr}.terminal{transform:none}.grid,.links{grid-template-columns:1fr}.section-title{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body>
-  <header class="wrap">
-    <nav aria-label="Main navigation">
-      <a class="brand" href="#top" aria-label="limoko / AETS home"><span class="orb" aria-hidden="true"></span><span>limoko / AETS</span></a>
-      <div class="navlinks">
-        <a href="#work">OSS</a>
-        <a href="#research">Research</a>
-        <a href="#field">Field Tool</a>
-        <a href="#links">Links</a>
-        <a href="research.html">Evidence</a>
-        <a href="kanbun.html">日式漢文</a>
-      </div>
-    </nav>
-  </header>
-
+  <header class="wrap"><nav aria-label="Main navigation"><a class="brand" href="#top" aria-label="limoko / AETS home"><span class="orb" aria-hidden="true"></span><span>limoko / AETS</span></a><div class="navlinks"><a href="#work">OSS</a><a href="#research">Research</a><a href="#field">Field Tool</a><a href="#links">Links</a><a href="research.html">Evidence</a><a href="kanbun.html">日式漢文</a><span class="lang" aria-label="Language switcher"><button type="button" class="active" data-set-lang="en">EN</button><button type="button" data-set-lang="zh">繁中</button></span></div></nav></header>
   <main id="top" class="wrap">
-    <section class="hero">
-      <div>
-        <div class="badge"><span class="pulse"></span> COMPUTEX OSS Conference 2026</div>
-        <h1><span class="gradient">Open tools</span><br />for local AI.</h1>
-        <p class="lead">
-          Hi, I am <strong>limoko</strong> / <strong>limonene213u</strong> from <strong>AETS（漢字名：暁技研）</strong>.
-          I build and document practical OSS around ROCm, local LLMs, MCP agents,
-          Japanese LLM evaluation, and infrastructure that can actually be operated.
-        </p>
-        <p class="lead">
-          逐家好，我是 <strong>limoko</strong> / <strong>limonene213u</strong>，來自 <strong>AETS（漢字名：暁技研）</strong>。
-          歡迎聊 AMD GPU、ROCm、本地 LLM、MCP、日本語資料集、開源基礎設施與公開研究記錄。
-        </p>
-        <div class="actions">
-          <a class="btn primary" href="https://github.com/limonene213u" target="_blank" rel="noopener">GitHub: limonene213u</a>
-          <a class="btn" href="research.html">Research & Evidence</a>
-          <a class="btn" href="https://github.com/limonene213u/operation-zuttomo_cli" target="_blank" rel="noopener">operation-zuttomo_cli</a>
-          <a class="btn" href="kanbun.html">日式漢文</a>
-        </div>
-      </div>
-
-      <div class="terminal" aria-label="Project summary terminal card">
-        <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-        <pre><span class="cyan">$</span> whoami
+    <section class="hero"><div><div class="badge"><span class="pulse"></span> COMPUTEX OSS Conference 2026</div><h1 data-lang="en"><span class="gradient">Open tools</span><br />for local AI.</h1><h1 data-lang="zh"><span class="gradient">為本地 AI</span><br />打造開源工具。</h1><p class="lead" data-lang="en">Hi, I am <strong>limoko</strong> / <strong>limonene213u</strong> from <strong>AETS（漢字名：暁技研）</strong>. I build and document practical OSS around ROCm, local LLMs, MCP agents, Japanese LLM evaluation, and infrastructure that can actually be operated.</p><p class="lead" data-lang="zh">逐家好，我是 <strong>limoko</strong> / <strong>limonene213u</strong>，來自 <strong>AETS（漢字名：暁技研）</strong>。我在做 ROCm、本地 LLM、MCP Agent、日本語 LLM 評測，以及真的能上線運用的基礎設施工具。</p><div class="actions"><a class="btn primary" href="https://github.com/limonene213u" target="_blank" rel="noopener">GitHub: limonene213u</a><a class="btn" href="research.html">Research & Evidence</a><a class="btn" href="https://github.com/limonene213u/operation-zuttomo_cli" target="_blank" rel="noopener">operation-zuttomo_cli</a><a class="btn" href="kanbun.html">日式漢文</a></div></div><div class="terminal" aria-label="Project summary terminal card"><div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div><pre><span class="cyan">$</span> whoami
 <span class="green">limoko</span> / limonene213u
 
 <span class="cyan">$</span> focus
@@ -160,97 +31,14 @@
 from a to-ho-ho failure → <span class="green">operation-zuttomo_cli</span>
 
 <span class="cyan">$</span> principle
-research → verification → prototype → operation</pre>
-      </div>
-    </section>
-
-    <section id="work">
-      <div class="section-title">
-        <h2>What I build</h2>
-        <p>Small enough to inspect, practical enough to run, and honest enough to document the rough edges.</p>
-      </div>
-      <div class="grid">
-        <article class="card">
-          <p class="kicker">ROCm / AMD GPU</p>
-          <h3>Local LLM on real hardware</h3>
-          <p>Exploring ROCm behavior through hands-on experiments, especially around Vega/gfx900 and Japanese LLM workloads.</p>
-          <div class="chips"><span class="chip">ROCm</span><span class="chip">gfx900</span><span class="chip">DeepSeek</span></div>
-        </article>
-        <article class="card">
-          <p class="kicker">MCP / Agents</p>
-          <h3>Agent tools for daily work</h3>
-          <p>MCP-style tools for mail, files, Windows APIs, web research, and evaluation harnesses.</p>
-          <div class="chips"><span class="chip">MCP</span><span class="chip">Agents</span><span class="chip">Automation</span></div>
-        </article>
-        <article class="card">
-          <p class="kicker">API / Operations</p>
-          <h3>Usage tracking & infra glue</h3>
-          <p>OpenAI/OpenRouter token tools, API proxy experiments, and server-side utilities born from real operation.</p>
-          <div class="chips"><span class="chip">OpenAI API</span><span class="chip">OpenRouter</span><span class="chip">HAProxy</span></div>
-        </article>
-      </div>
-    </section>
-
-    <section id="research">
-      <div class="section-title">
-        <h2>Research & evidence</h2>
-        <p>Public records, project pages, and the AETS implementation site behind the work.</p>
-      </div>
-      <div class="links">
-        <a class="repo" href="https://zenodo.org/records/16535944" target="_blank" rel="noopener"><p class="kicker">Zenodo / DOI</p><strong>DeepSeek R1 Japanese Language Adaptation</strong><span>Preprint and reproducible research infrastructure for Japanese-language adaptation and validation work.</span></a>
-        <a class="repo" href="https://zenodo.org/records/19394537" target="_blank" rel="noopener"><p class="kicker">Zenodo / DOI</p><strong>Additional public research record</strong><span>Supplementary public research artifact and DOI record connected to the AETS research trail.</span></a>
-        <a class="repo" href="https://aets-magi.github.io/vega-hbmx-pages/" target="_blank" rel="noopener"><p class="kicker">GitHub Pages</p><strong>Vega / HBMx / ROCm notes</strong><span>Public technical notes around legacy AMD GPU behavior, ROCm execution paths, and reproducible investigation.</span></a>
-        <a class="repo" href="https://hiroshima-aktk.com/" target="_blank" rel="noopener"><p class="kicker">AETS official</p><strong>AETS（暁技研）</strong><span>Research, implementation, AI / LLM infrastructure, GPU / scientific computing, and technical verification work.</span></a>
-      </div>
-    </section>
-
-    <section id="field">
-      <div class="split">
-        <div class="big-panel">
-          <p class="kicker">COMPUTEX Day 1 field tool</p>
-          <h2>To-ho-ho failure → CLI.</h2>
-          <p class="lead">
-            After a rough first-day operational mistake, I built <strong>operation-zuttomo_cli</strong> as a practical command-line tool from the lesson learned on-site.
-            It is a small example of the AETS style: observe the failure, write the tool, keep the trace open.
-          </p>
-          <div class="actions"><a class="btn primary" href="https://github.com/limonene213u/operation-zuttomo_cli" target="_blank" rel="noopener">Open operation-zuttomo_cli</a></div>
-        </div>
-        <div class="big-panel">
-          <p class="kicker">AETS style</p>
-          <h2>Not just proposals. Working traces.</h2>
-          <p class="lead">
-            AETS connects investigation, verification, prototyping, and implementation.
-            The goal is not to make a perfect-looking demo, but to make technical work easier to inspect, discuss, reuse, and improve.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section id="links">
-      <div class="section-title">
-        <h2>Representative OSS</h2>
-        <p>A quick map for people I meet at COMPUTEX 2026.</p>
-      </div>
-      <div class="links">
-        <a class="repo" href="https://github.com/limonene213u/ROCm-DeepSeek_R1-ja" target="_blank" rel="noopener"><strong>ROCm-DeepSeek_R1-ja</strong><span>ROCm + DeepSeek R1 Japanese/local LLM experiments.</span></a>
-        <a class="repo" href="https://github.com/limonene213u/MAGI-agents" target="_blank" rel="noopener"><strong>MAGI-agents</strong><span>Agent experiments and AETS-style OSS workspace.</span></a>
-        <a class="repo" href="https://github.com/limonene213u/openai-token-tracker" target="_blank" rel="noopener"><strong>openai-token-tracker</strong><span>Small tool for tracking OpenAI API usage and tokens.</span></a>
-        <a class="repo" href="https://github.com/limonene213u/multi_llm-client" target="_blank" rel="noopener"><strong>multi_llm-client</strong><span>Client-side experiments for using multiple LLM providers.</span></a>
-        <a class="repo" href="https://github.com/limonene213u/iLO-docker-fancon" target="_blank" rel="noopener"><strong>iLO-docker-fancon</strong><span>Infrastructure utility from real server operation.</span></a>
-        <a class="repo" href="https://github.com/limonene213u/reproducible-jp-llm-eval" target="_blank" rel="noopener"><strong>reproducible-jp-llm-eval</strong><span>Japanese LLM evaluation with an emphasis on explainable, inspectable work.</span></a>
-      </div>
-    </section>
-
-    <section>
-      <div class="contact">
-        <p class="kicker">Let's talk · COMPUTEX 2026</p>
-        <h2>Find me at COMPUTEX.</h2>
-        <p>I am happy to talk about AMD GPUs, ROCm, local LLMs, MCP, Japanese datasets, OSS infrastructure, public research records, and why tiny tools sometimes matter more than huge frameworks.</p>
-        <div class="actions" style="justify-content:center;"><a class="btn primary" href="https://github.com/limonene213u" target="_blank" rel="noopener">Open GitHub</a><a class="btn" href="research.html">Research & Evidence</a><a class="btn" href="kanbun.html">Japanese-style Kanbun</a></div>
-      </div>
-    </section>
+research → verification → prototype → operation</pre></div></section>
+    <section id="work"><div class="section-title"><h2 data-lang="en">What I build</h2><h2 data-lang="zh">我在做的東西</h2><p data-lang="en">Small enough to inspect, practical enough to run, and honest enough to document the rough edges.</p><p data-lang="zh">小到可以讀懂，大到可以實際運作；不只寫結論，也記錄踩坑與限制。</p></div><div class="grid"><article class="card"><p class="kicker">ROCm / AMD GPU</p><h3 data-lang="en">Local LLM on real hardware</h3><h3 data-lang="zh">在真實硬體上跑本地 LLM</h3><p data-lang="en">Exploring ROCm behavior through hands-on experiments, especially around Vega/gfx900 and Japanese LLM workloads.</p><p data-lang="zh">以實機實驗觀察 ROCm 的行為，特別關注 Vega/gfx900 與日本語 LLM 工作負載。</p><div class="chips"><span class="chip">ROCm</span><span class="chip">gfx900</span><span class="chip">DeepSeek</span></div></article><article class="card"><p class="kicker">MCP / Agents</p><h3 data-lang="en">Agent tools for daily work</h3><h3 data-lang="zh">日常工作用的 Agent 工具</h3><p data-lang="en">MCP-style tools for mail, files, Windows APIs, web research, and evaluation harnesses.</p><p data-lang="zh">打造連接郵件、檔案、Windows API、Web Research 與評測流程的 MCP 工具。</p><div class="chips"><span class="chip">MCP</span><span class="chip">Agents</span><span class="chip">Automation</span></div></article><article class="card"><p class="kicker">API / Operations</p><h3 data-lang="en">Usage tracking & infra glue</h3><h3 data-lang="zh">API 用量追蹤與基礎設施膠水</h3><p data-lang="en">OpenAI/OpenRouter token tools, API proxy experiments, and server-side utilities born from real operation.</p><p data-lang="zh">從實際運用中生出來的 OpenAI/OpenRouter 用量工具、API Proxy 與伺服器端小工具。</p><div class="chips"><span class="chip">OpenAI API</span><span class="chip">OpenRouter</span><span class="chip">HAProxy</span></div></article></div></section>
+    <section id="research"><div class="section-title"><h2 data-lang="en">Research & evidence</h2><h2 data-lang="zh">研究與公開記錄</h2><p data-lang="en">Public records, project pages, and the AETS implementation site behind the work.</p><p data-lang="zh">公開研究記錄、專案頁面，以及支撐實作工作的 AETS 網站。</p></div><div class="links"><a class="repo" href="https://zenodo.org/records/16535944" target="_blank" rel="noopener"><p class="kicker">Zenodo / DOI</p><strong>DeepSeek R1 Japanese Language Adaptation</strong><span data-lang="en">Preprint and reproducible research infrastructure for Japanese-language adaptation and validation work.</span><span data-lang="zh">日本語適應與驗證工作的預印本，以及可重現的研究基礎設施。</span></a><a class="repo" href="https://zenodo.org/records/19394537" target="_blank" rel="noopener"><p class="kicker">Zenodo / DOI</p><strong data-lang="en">Additional public research record</strong><strong data-lang="zh">追加公開研究記錄</strong><span data-lang="en">Supplementary public research artifact and DOI record connected to the AETS research trail.</span><span data-lang="zh">與 AETS 研究軌跡相關的補充公開研究成果與 DOI 記錄。</span></a><a class="repo" href="https://aets-magi.github.io/vega-hbmx-pages/" target="_blank" rel="noopener"><p class="kicker">GitHub Pages</p><strong>Vega / HBMx / ROCm notes</strong><span data-lang="en">Public technical notes around legacy AMD GPU behavior, ROCm execution paths, and reproducible investigation.</span><span data-lang="zh">關於舊世代 AMD GPU 行為、ROCm 執行路徑與可重現調查的公開技術筆記。</span></a><a class="repo" href="https://hiroshima-aktk.com/" target="_blank" rel="noopener"><p class="kicker">AETS official</p><strong>AETS（暁技研）</strong><span data-lang="en">Research, implementation, AI / LLM infrastructure, GPU / scientific computing, and technical verification work.</span><span data-lang="zh">研究、實作、AI / LLM 基礎設施、GPU / 科學計算與技術驗證工作。</span></a></div></section>
+    <section id="field"><div class="split"><div class="big-panel"><p class="kicker">COMPUTEX Day 1 field tool</p><h2 data-lang="en">To-ho-ho failure → CLI.</h2><h2 data-lang="zh">第一天的失敗 → CLI。</h2><p class="lead" data-lang="en">After a rough first-day operational mistake, I built <strong>operation-zuttomo_cli</strong> as a practical command-line tool from the lesson learned on-site. It is a small example of the AETS style: observe the failure, write the tool, keep the trace open.</p><p class="lead" data-lang="zh">在第一天經歷一個有點「トホホ」的現場失敗之後，我把現場學到的教訓做成了實用的命令列工具 <strong>operation-zuttomo_cli</strong>。這是 AETS 風格的小例子：觀察失敗、寫成工具、留下公開痕跡。</p><div class="actions"><a class="btn primary" href="https://github.com/limonene213u/operation-zuttomo_cli" target="_blank" rel="noopener">Open operation-zuttomo_cli</a></div></div><div class="big-panel"><p class="kicker">AETS style</p><h2 data-lang="en">Not just proposals. Working traces.</h2><h2 data-lang="zh">不只提案。留下可運作的痕跡。</h2><p class="lead" data-lang="en">AETS connects investigation, verification, prototyping, and implementation. The goal is not to make a perfect-looking demo, but to make technical work easier to inspect, discuss, reuse, and improve.</p><p class="lead" data-lang="zh">AETS 把調查、驗證、原型與實作接在一起。目標不是做一個看起來完美的 Demo，而是讓技術工作更容易檢視、討論、重用與改進。</p></div></div></section>
+    <section id="links"><div class="section-title"><h2 data-lang="en">Representative OSS</h2><h2 data-lang="zh">代表性開源專案</h2><p data-lang="en">A quick map for people I meet at COMPUTEX 2026.</p><p data-lang="zh">給在 COMPUTEX 2026 會場遇到的朋友快速了解用。</p></div><div class="links"><a class="repo" href="https://github.com/limonene213u/ROCm-DeepSeek_R1-ja" target="_blank" rel="noopener"><strong>ROCm-DeepSeek_R1-ja</strong><span>ROCm + DeepSeek R1 Japanese/local LLM experiments.</span></a><a class="repo" href="https://github.com/limonene213u/MAGI-agents" target="_blank" rel="noopener"><strong>MAGI-agents</strong><span>Agent experiments and AETS-style OSS workspace.</span></a><a class="repo" href="https://github.com/limonene213u/openai-token-tracker" target="_blank" rel="noopener"><strong>openai-token-tracker</strong><span>Small tool for tracking OpenAI API usage and tokens.</span></a><a class="repo" href="https://github.com/limonene213u/multi_llm-client" target="_blank" rel="noopener"><strong>multi_llm-client</strong><span>Client-side experiments for using multiple LLM providers.</span></a><a class="repo" href="https://github.com/limonene213u/iLO-docker-fancon" target="_blank" rel="noopener"><strong>iLO-docker-fancon</strong><span>Infrastructure utility from real server operation.</span></a><a class="repo" href="https://github.com/limonene213u/reproducible-jp-llm-eval" target="_blank" rel="noopener"><strong>reproducible-jp-llm-eval</strong><span>Japanese LLM evaluation with an emphasis on explainable, inspectable work.</span></a></div></section>
+    <section><div class="contact"><p class="kicker">Let's talk · COMPUTEX 2026</p><h2 data-lang="en">Find me at COMPUTEX.</h2><h2 data-lang="zh">COMPUTEX 會場見。</h2><p data-lang="en">I am happy to talk about AMD GPUs, ROCm, local LLMs, MCP, Japanese datasets, OSS infrastructure, public research records, and why tiny tools sometimes matter more than huge frameworks.</p><p data-lang="zh">歡迎聊 AMD GPU、ROCm、本地 LLM、MCP、日本語資料集、開源基礎設施、公開研究記錄，還有為什麼有時候小工具比巨大框架更重要。</p><div class="actions" style="justify-content:center"><a class="btn primary" href="https://github.com/limonene213u" target="_blank" rel="noopener">Open GitHub</a><a class="btn" href="research.html">Research & Evidence</a><a class="btn" href="kanbun.html">Japanese-style Kanbun</a></div></div></section>
   </main>
-
-  <footer class="wrap">© 2026 limoko / limonene213u / AETS（漢字名：暁技研）. Built as a lightweight GitHub Pages landing page for COMPUTEX 2026.</footer>
+  <footer class="wrap"><span data-lang="en">© 2026 limoko / limonene213u / AETS（漢字名：暁技研）. Built as a lightweight GitHub Pages landing page for COMPUTEX 2026.</span><span data-lang="zh">© 2026 limoko / limonene213u / AETS（漢字名：暁技研）。為 COMPUTEX 2026 製作的輕量 GitHub Pages。</span></footer>
+  <script>const buttons=document.querySelectorAll('[data-set-lang]');buttons.forEach(button=>{button.addEventListener('click',()=>{const lang=button.dataset.setLang;document.body.classList.toggle('zh',lang==='zh');buttons.forEach(b=>b.classList.toggle('active',b===button));document.documentElement.lang=lang==='zh'?'zh-Hant-TW':'en';});});</script>
 </body>
 </html>
