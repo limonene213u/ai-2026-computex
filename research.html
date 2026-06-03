@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research & Evidence - limoko / AETS MAGI</title>
+  <meta name="description" content="Public research records and technical evidence links for limoko / AETS MAGI at COMPUTEX 2026." />
+  <style>
+    :root {
+      --bg: #070812;
+      --panel: rgba(255,255,255,.075);
+      --line: rgba(255,255,255,.18);
+      --text: #f7f8ff;
+      --muted: #b9c0d4;
+      --hot: #ff4fd8;
+      --cyan: #42e8ff;
+      --green: #80ffbf;
+      --yellow: #ffe66d;
+      --shadow: 0 20px 80px rgba(0,0,0,.45);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255,79,216,.25), transparent 30%),
+        radial-gradient(circle at 78% 16%, rgba(66,232,255,.22), transparent 32%),
+        radial-gradient(circle at 50% 100%, rgba(128,255,191,.12), transparent 40%),
+        linear-gradient(135deg, #050610 0%, #0b1024 52%, #11081d 100%);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", "Noto Sans TC", sans-serif;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.7), transparent 78%);
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1080px, calc(100% - 32px)); margin: 0 auto; position: relative; z-index: 1; }
+    header { padding: 24px 0 0; }
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      border: 1px solid var(--line);
+      background: rgba(7,8,18,.55);
+      backdrop-filter: blur(18px);
+      border-radius: 999px;
+      padding: 12px 14px 12px 22px;
+      box-shadow: var(--shadow);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; font-weight: 900; white-space: nowrap; }
+    .orb { width: 28px; height: 28px; border-radius: 50%; background: conic-gradient(from 180deg, var(--hot), var(--cyan), var(--green), var(--hot)); box-shadow: 0 0 28px rgba(66,232,255,.55); }
+    .navlinks { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .navlinks a { color: var(--muted); padding: 9px 12px; border-radius: 999px; font-size: 13px; border: 1px solid transparent; }
+    .navlinks a:hover { color: var(--text); border-color: var(--line); background: rgba(255,255,255,.08); }
+    .hero { padding: 76px 0 36px; }
+    .badge { display: inline-flex; gap: 10px; border: 1px solid rgba(66,232,255,.38); background: rgba(66,232,255,.09); color: #d9fbff; border-radius: 999px; padding: 8px 12px; font-size: 13px; margin-bottom: 20px; }
+    h1 { margin: 0; font-size: clamp(44px, 8vw, 92px); line-height: .95; letter-spacing: -.06em; }
+    h2 { margin: 0; font-size: clamp(28px, 4vw, 44px); letter-spacing: -.04em; }
+    .gradient { background: linear-gradient(95deg, #fff 8%, #bff8ff 36%, #ffb6ef 70%, #fff3aa 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .lead { margin: 24px 0 0; color: var(--muted); font-size: clamp(17px, 2vw, 21px); line-height: 1.8; max-width: 860px; }
+    section { padding: 34px 0; }
+    .links { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 20px; }
+    .card { display: block; border: 1px solid var(--line); background: linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.045)); border-radius: 22px; padding: 22px; min-height: 172px; box-shadow: 0 18px 60px rgba(0,0,0,.22); transition: 170ms ease; position: relative; overflow: hidden; }
+    .card:hover { transform: translateY(-2px); border-color: rgba(66,232,255,.45); background: rgba(255,255,255,.1); }
+    .card::after { content: ""; position: absolute; inset: auto -50px -80px auto; width: 160px; height: 160px; background: radial-gradient(circle, rgba(66,232,255,.20), transparent 60%); pointer-events: none; }
+    .kicker { margin: 0 0 12px; color: var(--green); font-size: 12px; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+    .card strong { display: block; margin-bottom: 10px; font-size: 22px; letter-spacing: -.035em; }
+    .card span, .note { display: block; color: var(--muted); line-height: 1.7; }
+    .note { border-left: 3px solid var(--cyan); padding-left: 16px; margin-top: 18px; }
+    footer { padding: 30px 0 42px; color: #8d96b8; text-align: center; font-size: 13px; }
+    @media (max-width: 900px) { nav { border-radius: 24px; align-items: flex-start; flex-direction: column; } .navlinks { justify-content: flex-start; } .links { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <nav aria-label="Main navigation">
+      <a class="brand" href="./" aria-label="Back to home"><span class="orb" aria-hidden="true"></span><span>limoko / AETS MAGI</span></a>
+      <div class="navlinks">
+        <a href="./">Home</a>
+        <a href="kanbun.html">日式漢文</a>
+        <a href="https://github.com/limonene213u" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="badge">COMPUTEX 2026 · public research trail</div>
+      <h1><span class="gradient">Research</span><br />& evidence links.</h1>
+      <p class="lead">
+        A quick route from the COMPUTEX OSS landing page to public records, reproducible notes,
+        and the official AETS implementation / research site.
+      </p>
+    </section>
+
+    <section>
+      <h2>Public records</h2>
+      <div class="links">
+        <a class="card" href="https://zenodo.org/records/16535944" target="_blank" rel="noopener">
+          <p class="kicker">Zenodo / DOI</p>
+          <strong>DeepSeek R1 Japanese Language Adaptation</strong>
+          <span>Preprint and reproducible research infrastructure for Japanese-language adaptation and validation work.</span>
+        </a>
+        <a class="card" href="https://zenodo.org/records/19394537" target="_blank" rel="noopener">
+          <p class="kicker">Zenodo / DOI</p>
+          <strong>Additional public research record</strong>
+          <span>Supplementary public research artifact and DOI record connected to the AETS / MAGI research trail.</span>
+        </a>
+        <a class="card" href="https://aets-magi.github.io/vega-hbmx-pages/" target="_blank" rel="noopener">
+          <p class="kicker">GitHub Pages</p>
+          <strong>Vega / HBMx / ROCm notes</strong>
+          <span>Public technical notes around legacy AMD GPU behavior, ROCm execution paths, and reproducible investigation.</span>
+        </a>
+        <a class="card" href="https://hiroshima-aktk.com/" target="_blank" rel="noopener">
+          <p class="kicker">AETS official</p>
+          <strong>AETS / Research & Implementation</strong>
+          <span>Research, implementation, AI / LLM infrastructure, GPU / scientific computing, and technical verification work.</span>
+        </a>
+      </div>
+      <p class="note">
+        Serious route for people who want evidence first, while the Kanbun page keeps the friendly COMPUTEX energy alive.
+      </p>
+    </section>
+  </main>
+
+  <footer class="wrap">© 2026 limoko / limonene213u / AETS MAGI. Research links for COMPUTEX 2026.</footer>
+</body>
+</html>
